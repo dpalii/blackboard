@@ -66,13 +66,18 @@ public class KnowledgeComponentB : KnowledgeComponent
 
 public class KnowledgeComponentC : KnowledgeComponent
 {
+    private IConsole _console;
+    public KnowledgeComponentC(IConsole console)
+    {
+        _console = console;
+    }
     public override void Update(Blackboard blackboard)
     {
         // Retrieve data from the blackboard
         int result = blackboard.GetData("Result");
 
         // Display the final result
-        Console.WriteLine($"Final Result: {result}");
+        _console.WriteLine($"Final Result: {result}");
     }
 }
 
@@ -90,7 +95,7 @@ public class Program
         // Create and register the knowledge components
         var componentA = new KnowledgeComponentA();
         var componentB = new KnowledgeComponentB();
-        var componentC = new KnowledgeComponentC();
+        var componentC = new KnowledgeComponentC(new ConsoleWrapper());
 
         // Update the knowledge components
         componentA.Update(blackboard);
@@ -99,4 +104,17 @@ public class Program
 
         Console.ReadLine();
     }
+}
+
+public class ConsoleWrapper: IConsole
+{
+    public void WriteLine(string text)
+    {
+        Console.WriteLine(text);
+    }
+}
+
+public interface IConsole
+{
+    void WriteLine(string text);
 }
